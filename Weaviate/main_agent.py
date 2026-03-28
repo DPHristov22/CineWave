@@ -4,14 +4,12 @@ import cohere
 from dotenv import load_dotenv
 from weaviate.auth import AuthApiKey
 
-# 1. Load variables from .env
 load_dotenv()
 
 W_URL = os.getenv("WEAVIATE_URL")
 W_KEY = os.getenv("WEAVIATE_API_KEY")
 C_KEY = os.getenv("COHERE_API_KEY")
 
-# 2. Initialize Clients
 co = cohere.Client(C_KEY)
 client = weaviate.connect_to_weaviate_cloud(
     cluster_url=W_URL,
@@ -21,7 +19,6 @@ client = weaviate.connect_to_weaviate_cloud(
 
 
 def ask_ai(question):
-    # The rest of your function remains exactly the same...
     movies_coll = client.collections.get("Movie")
     response = movies_coll.query.near_text(query=question, limit=3)
 
@@ -35,6 +32,5 @@ def ask_ai(question):
 
 
 print("Movie AI Agent is ready (Secure Mode)!")
-# Test call
 print(ask_ai("What movies are in the database?"))
 client.close()

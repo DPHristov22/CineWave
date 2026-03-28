@@ -4,14 +4,12 @@ import weaviate.classes.config as wvcc
 from dotenv import load_dotenv
 from weaviate.auth import AuthApiKey
 
-# 1. Load variables from .env
 load_dotenv()
 
 W_URL = os.getenv("WEAVIATE_URL")
 W_KEY = os.getenv("WEAVIATE_API_KEY")
 C_KEY = os.getenv("COHERE_API_KEY")
 
-# 2. Connect to Weaviate
 client = weaviate.connect_to_weaviate_cloud(
     cluster_url=W_URL,
     auth_credentials=AuthApiKey(W_KEY),
@@ -21,12 +19,10 @@ client = weaviate.connect_to_weaviate_cloud(
 try:
     print("Connecting to Weaviate...")
 
-    # Delete existing collection if it exists to start fresh
     if client.collections.exists("Movie"):
         client.collections.delete("Movie")
         print("Existing 'Movie' collection deleted.")
 
-    # 3. Create the collection with English Vectorizer
     client.collections.create(
         name="Movie",
         vectorizer_config=wvcc.Configure.Vectorizer.text2vec_cohere(),
@@ -37,7 +33,6 @@ try:
         ]
     )
 
-    # 4. Insert English Data
     movies = client.collections.get("Movie")
 
     data_rows = [
